@@ -8,10 +8,11 @@ class Bezier():
     bernstein = []
     m = 0 
     def __init__(self, ppoints):
-        for i in ppoints:
-            self.controlPoints.append(i)
-        self.m = len(self.controlPoints) - 1
-        self.compute()
+        # for i in ppoints:
+        #     self.controlPoints.append(i)
+        # self.m = len(self.controlPoints) - 1
+        # self.compute()
+        self.setControlPoints(ppoints)
     def compute(self):
         for i in range(self.m + 1):
             value = math.factorial(self.m) / math.factorial(i) / math.factorial(self.m-i)
@@ -36,10 +37,11 @@ class Bezier():
         for i in self.controlPoints:
             x.append(i.x)
             y.append(i.y)
+        plt.scatter(x,y)
         plt.plot(x,y)
     def setControlPoints(self, pp):
         self.controlPoints = pp
-        self.m = len(self.controlPoints - 1)
+        self.m = len(self.controlPoints) - 1
         self.bernstein.clear()
         self.compute()
     def dt(self,t):
@@ -70,3 +72,14 @@ class Bezier():
                 b = x
             n += 1
         return (a+b)/2
+    def increase(self):
+        pp = []
+        pp.append(self.controlPoints[0])
+        self.m = self.m + 1
+        for i in range(1,self.m):
+            r = Vertex(0,0)
+            r.x = i/self.m *self.controlPoints[i-1].x + (1 - i/self.m) * self.controlPoints[i].x
+            r.y = i/self.m *self.controlPoints[i-1].y + (1 - i/self.m) * self.controlPoints[i].y
+            pp.append(r)
+        pp.append(self.controlPoints[-1])
+        self.setControlPoints(pp)
